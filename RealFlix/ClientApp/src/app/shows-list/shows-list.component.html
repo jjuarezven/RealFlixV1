@@ -1,0 +1,119 @@
+<div class="p-grid">
+    <button pButton type="button" label="Add Show" (click)="showOperations(1);"></button>
+</div>
+<div class="p-grid">
+    
+</div>
+<div class="p-grid" style="padding-top: 5%;">
+    <div class="p-col-2">
+        <div class="p-col-12" *ngIf="shows?.length > 0">
+            <label class="p-col-12">Search by:</label>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p-radioButton class="ui-g-6" name="group1" value="Keywords" label="Keywords" [(ngModel)]="searchCriteria.Type" inputId="opt1" (onClick)="onClickOption();"></p-radioButton>
+                    <input type="text" pInputText [(ngModel)]="searchCriteria.Criteria" *ngIf="searchCriteria.Type === 'Keywords'"/>
+                </div>
+                <div class="ui-g-12">
+                    <p-radioButton class="ui-g-6" name="group1" value="Language" label="Language" [(ngModel)]="searchCriteria.Type" inputId="opt2" (onClick)="onClickOption();"></p-radioButton>
+                    <p-dropdown [options]="languageOptions" [(ngModel)]="searchCriteria.Criteria" placeholder="Select a Language" *ngIf="searchCriteria.Type === 'Language'"></p-dropdown>
+                </div>
+                <div class="ui-g-12">
+                    <p-radioButton class="ui-g-6" name="group1" value="Genres" label="Genres" [(ngModel)]="searchCriteria.Type" inputId="opt3" (onClick)="onClickOption();"></p-radioButton>
+                    <p-dropdown [options]="genreOptions" [(ngModel)]="searchCriteria.Criteria" placeholder="Select a Genre" *ngIf="searchCriteria.Type === 'Genres'"></p-dropdown>
+                </div>
+                <div class="ui-g-12">
+                    <p-radioButton class="ui-g-6" name="group1" value="NetworkName" label="Channel" [(ngModel)]="searchCriteria.Type" inputId="opt4" (onClick)="onClickOption();"></p-radioButton>
+                    <p-dropdown [options]="channelOptions" [(ngModel)]="searchCriteria.Criteria" placeholder="Select a Channel" *ngIf="searchCriteria.Type === 'NetworkName'"></p-dropdown>
+                </div>
+                <div class="ui-g-12">
+                    <p-radioButton class="ui-g-6" name="group1" value="Schedule" label="Schedule" [(ngModel)]="searchCriteria.Type" inputId="opt5" (onClick)="onClickOption();"></p-radioButton>
+                    <span *ngIf="searchCriteria.Type === 'Schedule'">
+                        <p-dropdown [options]="scheduleDaysOptions" [(ngModel)]="searchCriteria.Criteria" placeholder="Select Day" ></p-dropdown>
+                        <div class="ui-g-8">
+                            <label class="ui-g-4" for="dayTime">Time:</label>
+                            <p-calendar class="ui-g-2" [(ngModel)]="scheduleDayTime" [timeOnly]="true" name="dayTime" [showTime]="true"></p-calendar>
+                        </div>
+                    </span>
+                </div>
+
+                <div class="p-grid">
+                    <div class="p-col-6">
+                        <button pButton type="button" icon="pi pi-search" [disabled]="searchCriteria.Type === undefined || searchCriteria.Criteria === undefined" label="Search" iconPos="right" (click)="search();"></button>
+                    </div>
+                </div>
+                
+                <h2 *ngIf="errorSearch">Please check your search conditions!!</h2>
+            </div>
+        </div>
+    </div>
+    <div class="p-col-10">
+        <p-table [value]="shows" [columns]="columns" [loading]="loadingShows" dataKey="ID" [paginator]="true" [rows]="5" [rowsPerPageOptions]="[5,10,20,{showAll:'All'}]">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                        {{ col.header }}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr>
+                    <td>
+                        <img [src]="rowData.ImageOriginal" alt="" class="poster">
+                    </td>
+                    <td>
+                        {{rowData.Name}}
+                    </td>
+                    <td>
+                        {{rowData.Language}}
+                    </td>
+                    <td>
+                        {{rowData.NetworkName}}
+                    </td>
+                    <td>
+                        <p-rating [(ngModel)]="rowData.RatingAverage" [stars]=10 readonly="true" [cancel]="false"></p-rating>
+                    </td>
+                    <td>
+                        {{rowData.Genres}}
+                    </td>
+                    <td>
+                        <button pButton type="button" icon="pi pi-search" style="margin-right:5px" title="Detail" (click)="currentShow = rowData; showOperations(2);"></button>
+                        <button pButton type="button" icon="pi pi-pencil" style="margin-right:5px" title="Edit" (click)="currentShow = rowData; showOperations(3);"></button>
+                        <button pButton type="button" icon="pi pi-trash" style="margin-right:5px" title="Delete" (click)="currentShow = rowData; showOperations(4);"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                    <td [attr.colspan]="columns.length">
+                        No records found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog [(visible)]="displayShowModal" [style]="{width: '50vw'}" [modal]="true">
+    <p-header>
+        {{modalTitle}}
+    </p-header>
+    <app-show [show]="currentShow" [languageOptions]="languageOptions" [channelOptions]="channelOptions" [genreOptions]="genreOptions" (updateShowsInfo)="updateShowsInfo($event);"></app-show>
+</p-dialog>
+
+<p-dialog [(visible)]="displayDeleteShowModal" [modal]="true">
+    <p-header>
+        Confirm show deletion
+    </p-header>
+    <label>Are you sure you want to delete this Show?</label>
+    <p-footer>
+        <div class="p-grid p-justify-center">
+            <div class="p-col-6">
+                <button pButton type="submit" label="Accept" class="ui-button-raised" (click)="deleteShow(); displayDeleteShowModal = false;"></button>
+            </div>
+            <div class="p-col-6">
+                <button pButton type="button" label="Cancel" class="ui-button-raised ui-button-warning" (click)="displayDeleteShowModal = false;"></button>
+            </div>
+        </div>
+    </p-footer>
+</p-dialog>

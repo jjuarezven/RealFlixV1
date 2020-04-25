@@ -1,0 +1,104 @@
+<form *ngIf="showForm" [formGroup]="showForm" (ngSubmit)="saveShow()">
+    <div class="ui-g">
+        <div class="ui-sm-12 ui-md-12 ui-lg-9" style="padding: 0;">
+            <div class="container">
+                <div class="ui-g">
+                    <div class="ui-sm-12 ui-md-12 ui-lg-6">
+                        <label class="ui-g-4">Name</label>
+                        <div class="ui-g-8" style="padding: 0px;">
+                            <div class="ui-inputgroup">
+                                <input
+                                    pInputText
+                                    style="width: 100%;"
+                                    type="text"
+                                    formControlName="Name"
+                                    placeholder="Enter Show Name"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-sm-12 ui-md-12 ui-lg-6">
+                        <label class="ui-g-4">Url</label>
+                        <div class="ui-g-8" style="padding: 0px;">
+                            <div class="ui-inputgroup">
+                                <input
+                                    pInputText
+                                    style="width: 100%;"
+                                    type="text"
+                                    formControlName="Url"
+                                    placeholder="Enter Url"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-sm-12 ui-md-12 ui-lg-6">
+                        <label class="ui-g-4">Language</label>
+                        <div class="ui-g-8" style="padding: 0px;">
+                            <div class="ui-inputgroup">
+                                <p-dropdown
+                                    styleClass="w100"
+                                    [options]="languageOptions" 
+                                    formControlName="Language"                
+                                    placeholder="Select Language"
+                                ></p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-sm-12 ui-md-12 ui-lg-6">
+                        <label class="ui-g-4">Channel</label>
+                        <div class="ui-g-8" style="padding: 0px;">
+                            <div class="ui-inputgroup">
+                                <p-dropdown
+                                    styleClass="w100"
+                                    [options]="channelOptions" 
+                                    formControlName="NetworkName"                
+                                    placeholder="Select Channel"
+                                ></p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-sm-12 ui-md-12 ui-lg-6">
+                        <label class="ui-g-4">Genres</label>
+                        <div class="ui-g-8" style="padding: 0px;">
+                            <div class="ui-inputgroup">
+                                <p-listbox [options]="genreOptions" formControlName="Genres" [multiple]="true" [checkbox]="true" appendTo="body"></p-listbox>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-sm-12 ui-md-12 ui-lg-6">
+                        <label class="ui-g-4">Summary</label>
+                        <div class="ui-g-8" style="padding: 0px;">
+                            <div class="ui-inputgroup">
+                                <textarea pInputTextarea formControlName="Summary"></textarea>
+                            </div>
+                        </div>
+                        <div class="ui-sm-6 ui-md-6 ui-lg-6">
+                            <div class="ui-g-6" style="padding: 0px;">
+                                <img [src]="show.ImageOriginal" style="width: 200px; height: 200px" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-sm-12 ui-md-12 ui-lg-6">
+                        <label class="ui-g-2">Rating</label>
+                        <div class="ui-g-10" style="padding: 0px;">
+                            <div class="ui-inputgroup">
+                                <p-rating formControlName="RatingAverage" [stars]=10 [cancel]="true"></p-rating>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="p-grid p-justify-center">
+            <div class="p-col-6">
+                <button pButton type="submit" label="Save" class="ui-button-raised"></button>
+            </div>
+            <div class="p-col-6">
+                <button pButton type="button" label="Cancel" class="ui-button-raised ui-button-warning" (click)="cancel();"></button>
+            </div>
+        </div>
+    </p-footer>
+</form>
+
